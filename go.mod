@@ -1,3 +1,3 @@
-module github.com/tecnickcom/gogen/target/github.com/dummyvendor/dummy
+module github.com/annasobo/broad-mbta
 
 go 1.13

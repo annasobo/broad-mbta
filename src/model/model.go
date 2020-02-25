@@ -1,7 +1,5 @@
 package model
 
-import "sync"
-
 type Stop struct {
 	Id      string
 	Name    string
@@ -12,7 +10,10 @@ type Route struct {
 	Id    string
 	Name  string
 	Stops []Stop
-	Mux   sync.Mutex
+}
+
+type MbtaRoutes struct {
+	Data []*MbtaRoute `json:"data"`
 }
 
 type MbtaRoute struct {
@@ -24,6 +25,10 @@ type MbtaRouteAttributes struct {
 	LongName string `json:"long_name,omitempty"`
 }
 
+type MbtaStops struct {
+	Data []*MbtaStop `json:"data"`
+}
+
 type MbtaStop struct {
 	Attributes *MbtaStopAttributes `json:"attributes,omitempty"`
 	ID         string              `json:"id,omitempty"`
@@ -33,21 +38,17 @@ type MbtaStopAttributes struct {
 	Name string `json:"name,omitempty"`
 }
 
-func (m MbtaStop) mbtaStopToStop() Stop {
+func (m MbtaStop) MbtaStopToStop() Stop {
 	return Stop{
 		Id:   m.ID,
 		Name: m.Attributes.Name,
 	}
 }
 
-func (m MbtaRoute) mbtaRouteToRoute(mbtaStops []MbtaStop) Route {
-	var stops []Stop
-	if mbtaStops != nil {
-
-	}
+func (m MbtaRoute) MbtaRouteToRoute() Route {
 	return Route{
 		Id:    m.ID,
 		Name:  m.Attributes.LongName,
-		Stops: stops,
+		Stops: nil,
 	}
 }

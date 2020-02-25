@@ -2,36 +2,39 @@ package service
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
 	"io/ioutil"
 	"net/http"
+
+	"github.com/annasobo/broad-mbta/src/model"
 )
 
-func getRoutes() ([]MbtaRoute, error) {
-	data, err := makeGetHttp(RoutesPath)
+func getRoutes() ([]*model.MbtaRoute, error) {
+	data, err := makeGetHttp(model.RoutesPath)
 	if err != nil {
 		return nil, err
 	}
-	routes := make([]MbtaRoute, 0)
+	var routes model.MbtaRoutes
 	err = json.Unmarshal(data, &routes)
 	if err != nil {
 		return nil, err
 	}
-	return routes, nil
+	return routes.Data, nil
 }
 
-func getStopsByRoute(routeId string) ([]MbtaStop, error) {
-	path := fmt.Sprintf(StopsPath, routeId)
+func GetStopsByRoute(routeId string) ([]*model.MbtaStop, error) {
+	path := fmt.Sprintf(model.StopsPath, routeId)
 	data, err := makeGetHttp(path)
 	if err != nil {
 		return nil, err
 	}
-	stops := make([]MbtaStop, 0)
+	var stops model.MbtaStops
 	err = json.Unmarshal(data, &stops)
 	if err != nil {
 		return nil, err
 	}
-	return stops, nil
+	return stops.Data, nil
 }
 
 func makeGetHttp(path string) ([]byte, error) {
@@ -40,5 +43,8 @@ func makeGetHttp(path string) ([]byte, error) {
 		return nil, err
 	}
 	defer resp.Body.Close()
+	if resp.StatusCode%100 > 3 {
+		return nil, errors.New("Http response different than expected: " + string(resp.StatusCode))
+	}
 	return ioutil.ReadAll(resp.Body)
 }
