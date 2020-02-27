@@ -6,10 +6,12 @@ import (
 	"fmt"
 	"io/ioutil"
 	"net/http"
+	"time"
 
 	"github.com/annasobo/broad-mbta/src/model"
 )
 
+// getRoutes returns Routes from MBTA API
 func getRoutes() ([]*model.MbtaRoute, error) {
 	data, err := makeGetHttp(model.RoutesPath)
 	if err != nil {
@@ -23,6 +25,7 @@ func getRoutes() ([]*model.MbtaRoute, error) {
 	return routes.Data, nil
 }
 
+// GetStopsByRoute returns all stops of the given routeId in correct order
 func GetStopsByRoute(routeId string) ([]*model.MbtaStop, error) {
 	path := fmt.Sprintf(model.StopsPath, routeId)
 	data, err := makeGetHttp(path)
@@ -37,9 +40,20 @@ func GetStopsByRoute(routeId string) ([]*model.MbtaStop, error) {
 	return stops.Data, nil
 }
 
+// TODO: Number of retries should go to config file
+// makeGetHttp is a simple function to make http GET call to the API. It takes path of the API as an argument
+// makeGetHttp returns a body from the respnse or error in case of failed http call
+// Because there can be throtteling like in the MBTA case, where we are limited to 20 requests per sec,
+// the method is waiting one second and retrying the call in case of errors
 func makeGetHttp(path string) ([]byte, error) {
+	retry := 2
 	resp, err := http.Get(path)
-	if err != nil {
+	if err != nil && retry > 0 {
+		retry -= 1
+		time.Sleep(1000)
+		resp, err = http.Get(path)
+	}
+	if err != nil && retry <= 0 {
 		return nil, err
 	}
 	defer resp.Body.Close()
