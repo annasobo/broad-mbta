@@ -11,8 +11,8 @@ import (
 	"github.com/annasobo/broad-mbta/src/model"
 )
 
-// getRoutes returns Routes from MBTA API
-func getRoutes() ([]*model.MbtaRoute, error) {
+// GetRoutes returns Routes from MBTA API
+func GetRoutes() ([]*model.MbtaRoute, error) {
 	data, err := makeGetHttp(model.RoutesPath)
 	if err != nil {
 		return nil, err
@@ -26,8 +26,8 @@ func getRoutes() ([]*model.MbtaRoute, error) {
 }
 
 // GetStopsByRoute returns all stops of the given routeId in correct order
-func GetStopsByRoute(routeId string) ([]*model.MbtaStop, error) {
-	path := fmt.Sprintf(model.StopsPath, routeId)
+func GetStopsByRoute(routeID string) ([]*model.MbtaStop, error) {
+	path := fmt.Sprintf(model.StopsPath, routeID)
 	data, err := makeGetHttp(path)
 	if err != nil {
 		return nil, err

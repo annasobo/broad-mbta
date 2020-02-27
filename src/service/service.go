@@ -16,11 +16,17 @@ type Data struct {
 	Err   error
 }
 
+// HTTPFunctions is for testing  purposes
+type HTTPFunctions struct {
+	GetHTTPRoutes func() ([]*model.MbtaRoute, error)
+	GetHTTPStops  func(routeId string) ([]*model.MbtaStop, error)
+}
+
 // LoadData method connects to MBTA API, takes all MBTA subway routes together with their stops
-func LoadData() (map[string]model.Route, error) {
+func (f *HTTPFunctions) LoadData() (map[string]model.Route, error) {
 	result := make(map[string]model.Route)
 	// get routes from MBTA API
-	routes, err := getRoutes()
+	routes, err := GetRoutes()
 	if err != nil {
 		return nil, err
 	}
@@ -35,7 +41,7 @@ func LoadData() (map[string]model.Route, error) {
 		// The worker ready to go
 		wg.Add(1)
 		// The worker starts processing
-		go loadStops(route.MbtaRouteToRoute(), channel, &wg)
+		go f.loadStops(route.MbtaRouteToRoute(), channel, &wg)
 	}
 	// Wait until all workers are done
 	wg.Wait()
@@ -54,7 +60,7 @@ func LoadData() (map[string]model.Route, error) {
 }
 
 // loadStops is a function executed as go routine. It's running in parallel for every route
-func loadStops(route model.Route, channel chan *Data, wg *sync.WaitGroup) {
+func (*HTTPFunctions) loadStops(route model.Route, channel chan *Data, wg *sync.WaitGroup) {
 	// Notify WaitGroup when done
 	defer wg.Done()
 
@@ -89,7 +95,7 @@ func LoadStopMap(data map[string]model.Route) map[string]model.Stop {
 	return stopMap
 }
 
-// Validates the std input for question3
+// ValidStation validates the std input for question3
 func ValidStation(input string, stations []string, graph map[string]model.Stop) (string, error) {
 	result := ""
 	if from, err := strconv.Atoi(input); err == nil && from >= 0 && from < len(stations) {

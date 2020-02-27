@@ -12,21 +12,22 @@ import (
 )
 
 func main() {
-	data, err := service.LoadData()
+	httpFunctions := service.HTTPFunctions{GetHTTPRoutes: service.GetRoutes, GetHTTPStops: service.GetStopsByRoute}
+	data, err := httpFunctions.LoadData()
 	if err != nil {
 		println(err.Error())
 	}
-	PrintQuestion1(data)
-	PrintQuestion2(data)
-	PrintQuestion3(data)
+	printQuestion1(data)
+	printQuestion2(data)
+	printQuestion3(data)
 }
 
-func PrintQuestion1(data map[string]model.Route) {
+func printQuestion1(data map[string]model.Route) {
 	println("Question 1 - retrieve all long names for Light and Heavy Rail.")
 	idx := 0
 	length := len(data)
 	for _, val := range data {
-		idx += 1
+		idx++
 		print(val.Name)
 		// don't print coma at the end
 		if idx <= length-1 {
@@ -37,7 +38,7 @@ func PrintQuestion1(data map[string]model.Route) {
 	println()
 }
 
-func PrintQuestion2(data map[string]model.Route) {
+func printQuestion2(data map[string]model.Route) {
 	println("Question 2")
 	println("Part 1 - subway route with the most stops")
 	r, c := service.Maximum(data)
@@ -51,8 +52,8 @@ func PrintQuestion2(data map[string]model.Route) {
 	routes := service.StopWithMultipleRoutes(data)
 	for key, val := range routes {
 		println(fmt.Sprintf("%v has multiple routes, the routes are: ", key))
-		for idx, routeId := range val {
-			print(data[routeId].Name)
+		for idx, routeID := range val {
+			print(data[routeID].Name)
 			if idx < len(val)-1 {
 				print(", ")
 			}
@@ -62,10 +63,10 @@ func PrintQuestion2(data map[string]model.Route) {
 	println()
 }
 
-func PrintQuestion3(data map[string]model.Route) {
+func printQuestion3(data map[string]model.Route) {
 	graph := service.LoadStopMap(data)
 	stations := make([]string, 0)
-	for idx, _ := range graph {
+	for idx := range graph {
 		stations = append(stations, idx)
 	}
 	sort.Strings(stations)
@@ -81,14 +82,15 @@ func PrintQuestion3(data map[string]model.Route) {
 	fromIn, _ := reader.ReadString('\n')
 	from := ""
 	to := ""
-	var err error
-	for from, err = service.ValidStation(strings.Trim(fromIn, "\n "), stations, graph); err != nil; {
+	from, err := service.ValidStation(strings.Trim(fromIn, "\n "), stations, graph)
+	for ; err != nil; from, err = service.ValidStation(strings.Trim(fromIn, "\n "), stations, graph) {
 		println("The station name or number is incorrect, enter valid value: ")
 		fromIn, _ = reader.ReadString('\n')
 	}
 	println("Enter the number or name of the second stop: ")
 	toIn, _ := reader.ReadString('\n')
-	for to, err = service.ValidStation(strings.Trim(toIn, "\n "), stations, graph); err != nil; {
+	to, err = service.ValidStation(strings.Trim(toIn, "\n "), stations, graph)
+	for ; err != nil; to, err = service.ValidStation(strings.Trim(toIn, "\n "), stations, graph) {
 		fmt.Println("The station name or number is incorrect, enter valid value: ")
 		toIn, _ = reader.ReadString('\n')
 	}

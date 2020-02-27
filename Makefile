@@ -4,4 +4,7 @@ run:
 	go install ./src/ && go run ./src/
 
 test: 
-	go install ./src/ && go test ./src/
+	go get -u golang.org/x/lint/golint
+	CGO_ENABLED=1 go test -v -coverprofile=coverage.txt -covermode=atomic -count=1 ./src/...
+	cd ./src && golint
+	

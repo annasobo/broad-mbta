@@ -2,8 +2,6 @@
 
 * Broad Institute MBTA challenge
 
-* **category**    Application
-
 ## Description
 
 The project is a golang standalone application. It uses MBTA public API without the API key to get datasets for subway Routes and their Stops.
@@ -16,9 +14,10 @@ Features:
 - minimal data model for MBTA
 
 TODO:
-- better exception handling. Errors should be more specific (ex. HTTPError, ParseError etc)
+- Better exception handling. Errors should be more specific (ex. HTTPError, ParseError etc)
 - Almost entire question 3 needs to be implemented 
 - Test coverage should be better (closer to 100%)
+- Tests should cover edge cases (like http errors, parsing errors)
 - The console output is ugly 
 - The list of stops in 3 columns isn't stright
 - Dockerize the project
@@ -33,8 +32,8 @@ To install Golang just follow the instructions from here: https://golang.org/doc
 1. Clone the project code from github: https://github.com/annasobo/broad-mbta.git
 2. Once you have Golang installed:
 - type ```make``` to run the application
-- type ```make test``` to run unit tests with coverage
-3. To exit the application use command+C for MacOS (Ctrl+C for Linux and Windows)
+- type ```make test``` to run unit tests with coverage and linter
+3. To exit the application use Ctrl+C
 
 ## Sample output:
 
