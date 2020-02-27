@@ -21,24 +21,19 @@ TODO:
 - Test coverage should be better (closer to 100%)
 - The console output is ugly 
 - The list of stops in 3 columns isn't stright
+- Dockerize the project
 
 ## Requirements
 
-To run the program you will need to install Golang v0.13 or Docker.
+To run the program you will need to install Golang v0.13.
 
 To install Golang just follow the instructions from here: https://golang.org/doc/install
 
-If you don't want to install Golang, you can install docker as an alternative: https://docs.docker.com/install/
-
 ## Quick Start
 1. Clone the project code from github: https://github.com/annasobo/broad-mbta.git
-2a. If you have Golang installed:
+2. Once you have Golang installed:
 - type ```make``` to run the application
 - type ```make test``` to run unit tests with coverage
-
-2b. If you have docker installed: 
-- type ```docker-compose up``` - the command will execute golang docker container, as well as will test and run Broad-mbta application
-
 3. To exit the application use command+C for MacOS (Ctrl+C for Linux and Windows)
 
 ## Sample output:
