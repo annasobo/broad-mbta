@@ -43,7 +43,8 @@ If you don't want to install Golang, you can install docker as an alternative: h
 
 ## Sample output:
 
-```Question 1 - retrieve all long names for Light and Heavy Rail.
+```
+Question 1 - retrieve all long names for Light and Heavy Rail.
 Red Line, Green Line B, Mattapan Trolley, Blue Line, Green Line D, Green Line E, Orange Line, Green Line C
 
 Question 2
